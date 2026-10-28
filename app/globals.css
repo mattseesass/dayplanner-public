@@ -1,0 +1,1435 @@
+:root {
+  --bg: #f3efe8;
+  --ink: #1d1c1a;
+  --ink-2: #6b665d;
+  --line: #d9d3c7;
+  --surface: #ebe6db;
+  --training: #b5533c;
+  --mind: #5c6f8f;
+  --work: #4f7a5f;
+  --appointment: #b38a2e;
+  --rest: #9a948a;
+  --now: #1d1c1a;
+  --sheet: #f8f5ef;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161a;
+    --ink: #ece8df;
+    --ink-2: #8d9097;
+    --line: #2a2d33;
+    --surface: #1c1f25;
+    --training: #d9775f;
+    --mind: #8aa0c4;
+    --work: #7fae8d;
+    --appointment: #d8b25a;
+    --rest: #6f737b;
+    --now: #ece8df;
+    --sheet: #1c1f25;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-display), Georgia, serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.phone {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  padding: 0 16px calc(120px + env(safe-area-inset-bottom));
+  position: relative;
+}
+
+.head {
+  padding: calc(28px + env(safe-area-inset-top)) 0 20px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.head h1 {
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.head .mono {
+  text-align: right;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.track {
+  position: relative;
+  margin-left: 52px;
+}
+
+.hour {
+  position: absolute;
+  left: -52px;
+  right: 0;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  color: var(--ink-2);
+  padding-top: 2px;
+  pointer-events: none;
+}
+
+.block {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: 6px 12px;
+  border-left: 3px solid var(--c);
+  background: color-mix(in srgb, var(--c) 14%, var(--bg));
+  border-radius: 2px 10px 10px 2px;
+  touch-action: pan-y;
+  overflow: hidden;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.block.short {
+  padding: 0 12px;
+  justify-content: center;
+}
+
+.block.short .title {
+  font-size: 13px;
+}
+
+.block.flex {
+  background: transparent;
+  border: 1px dashed color-mix(in srgb, var(--c) 55%, transparent);
+  border-left: 3px solid var(--c);
+}
+
+.block .title {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.block .when {
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+.block.done {
+  opacity: 0.45;
+}
+
+.block.done .title {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.block.skipped {
+  opacity: 0.35;
+}
+
+.block.skipped .title {
+  font-style: italic;
+}
+
+.block.dragging {
+  z-index: 5;
+  outline: 1px solid var(--c);
+}
+
+.marker {
+  position: absolute;
+  left: -52px;
+  right: 0;
+  border-top: 1px solid var(--appointment);
+  font-size: 10px;
+  color: var(--appointment);
+  text-align: right;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.marker span {
+  position: relative;
+  top: -15px;
+  background: var(--bg);
+  padding-left: 6px;
+}
+
+.now {
+  position: absolute;
+  left: -52px;
+  right: 0;
+  height: 0;
+  border-top: 2px solid var(--now);
+  z-index: 4;
+  pointer-events: none;
+}
+
+.now span {
+  position: absolute;
+  left: 0;
+  top: -11px;
+  font-size: 11px;
+  background: var(--now);
+  color: var(--bg);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 12px 16px calc(14px + env(safe-area-inset-bottom));
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+}
+
+.bar-inner {
+  width: 100%;
+  max-width: 448px;
+  display: flex;
+  gap: 8px;
+}
+
+.bar button {
+  flex: 1;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 16px;
+  text-align: left;
+  color: var(--ink-2);
+}
+
+.bar button.primary {
+  flex: 2;
+}
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 0.35);
+  z-index: 20;
+}
+
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0 auto;
+  max-width: 480px;
+  z-index: 21;
+  background: var(--sheet);
+  border-radius: 20px 20px 0 0;
+  padding: 10px 20px calc(24px + env(safe-area-inset-bottom));
+}
+
+.sheet .grip {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line);
+  margin: 0 auto 18px;
+}
+
+.sheet h2 {
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--c);
+}
+
+.sheet .meta {
+  font-size: 13px;
+  color: var(--ink-2);
+  margin: 4px 0 10px;
+}
+
+.sheet .why {
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--ink-2);
+  margin-bottom: 20px;
+}
+
+.sheet .actions {
+  display: flex;
+  gap: 8px;
+}
+
+.sheet .actions button {
+  flex: 1;
+  padding: 15px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  font-size: 18px;
+}
+
+.sheet .actions button.go {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+.head .back {
+  margin-left: auto;
+  margin-right: 14px;
+}
+
+.head .back,
+.brain .back {
+  color: var(--ink-2);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.search input,
+.add input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 14px 0 6px;
+  font-size: 13px;
+}
+
+.filters a {
+  color: var(--ink-2);
+  text-decoration: none;
+  padding: 6px 0;
+}
+
+.filters a[aria-current="true"] {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.filters .gap {
+  flex: 1;
+}
+
+.empty {
+  color: var(--ink-2);
+  margin: 32px 0;
+}
+
+.area {
+  margin-top: 26px;
+}
+
+.area h2 {
+  font-size: 22px;
+  font-weight: 500;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+.area ul {
+  list-style: none;
+}
+
+.area li {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.area li.archived,
+.area li.done {
+  opacity: 0.5;
+}
+
+.area .row {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.area .kind {
+  font-size: 11px;
+  color: var(--ink-2);
+  min-width: 34px;
+}
+
+.area .t {
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.area .body {
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ink-2);
+  margin: 6px 0 0 44px;
+}
+
+.area .meta {
+  font-size: 11px;
+  color: var(--ink-2);
+  margin: 6px 0 0 44px;
+}
+
+.area .acts {
+  display: flex;
+  gap: 16px;
+  margin: 8px 0 0 44px;
+}
+
+.area .acts button {
+  font-size: 14px;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 4px 0;
+}
+
+.add {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 12px 16px calc(14px + env(safe-area-inset-bottom));
+  background: var(--bg);
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 8px;
+}
+
+.add button {
+  padding: 0 20px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 16px;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100dvh;
+}
+
+.login h1 {
+  font-size: 44px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+
+.login form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login input,
+.admin input:not([type="checkbox"]) {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+}
+
+.login button,
+.admin form > button {
+  padding: 14px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 16px;
+}
+
+.login [role="alert"] {
+  color: var(--training);
+}
+
+.admin section {
+  margin-top: 28px;
+}
+
+.admin h2 {
+  font-size: 22px;
+  font-weight: 500;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 12px;
+}
+
+.admin form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin .lbl {
+  font-size: 14px;
+  color: var(--ink-2);
+  margin-top: 6px;
+}
+
+.admin .days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.admin .days label {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.admin .grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+}
+
+.admin .note {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.admin .plain {
+  list-style: none;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.admin .plain .t {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 16px;
+  margin-left: 6px;
+}
+
+.admin .sum {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.admin .signout {
+  margin: 36px 0 20px;
+}
+
+.admin .signout button {
+  background: none;
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+}
+
+.sheet {
+  max-height: 80dvh;
+  overflow-y: auto;
+}
+
+.sheet .why {
+  white-space: pre-line;
+}
+
+.block {
+  touch-action: pan-y;
+}
+
+.grip-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 44px;
+  touch-action: none;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grip-handle::before {
+  content: "";
+  width: 14px;
+  height: 2px;
+  background: var(--ink-2);
+  box-shadow:
+    0 -5px 0 var(--ink-2),
+    0 5px 0 var(--ink-2);
+  opacity: 0.55;
+}
+
+.block.dragging .grip-handle {
+  cursor: grabbing;
+}
+
+/* Workout tracker */
+.wk {
+  --c: var(--training);
+}
+
+.wk .ex {
+  margin-top: 26px;
+}
+
+.wk .ex.ss {
+  border-left: 2px solid var(--c);
+  padding-left: 12px;
+}
+
+.wk .ex.ss + .ex.ss {
+  margin-top: 14px;
+}
+
+.wk .tag {
+  font-size: 11px;
+  color: var(--c);
+  margin-bottom: 4px;
+}
+
+.wk .exhead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wk .exhead h2 {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.wk .meta {
+  font-size: 11px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.wk .sets {
+  display: grid;
+  grid-template-columns: 22px 1fr 64px 54px 46px 40px;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.wk .sets .h {
+  font-size: 11px;
+  color: var(--ink-2);
+  text-align: center;
+}
+
+.wk .sets .idx,
+.wk .sets .prev {
+  font-size: 12px;
+  color: var(--ink-2);
+  text-align: center;
+}
+
+.wk .sets .prev {
+  white-space: nowrap;
+}
+
+.wk .sets input {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 2px;
+  text-align: center;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.wk .sets input::placeholder {
+  color: var(--ink-2);
+  opacity: 0.5;
+}
+
+.wk .sets input.done {
+  opacity: 0.55;
+}
+
+.wk .sets input:disabled {
+  opacity: 0.6;
+}
+
+.wk .check {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  color: var(--bg);
+  justify-self: center;
+}
+
+.wk .check.on {
+  background: var(--c);
+  border-color: var(--c);
+}
+
+.wk input:focus-visible,
+.wk .check:focus-visible,
+.wk-bar button:focus-visible {
+  outline: 2px solid var(--c);
+  outline-offset: 2px;
+}
+
+.wk-sum {
+  margin-bottom: 8px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.wk-sum .stats {
+  display: flex;
+  gap: 22px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.wk-sum .stats b {
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--ink);
+  font-family: var(--font-display), Georgia, serif;
+}
+
+.wk-sum .prs {
+  list-style: none;
+  margin-top: 12px;
+}
+
+.wk-sum .prs li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+}
+
+.wk-sum .prs .mono {
+  font-size: 12px;
+  color: var(--c);
+}
+
+.wk-bar button,
+.wk-bar .btnlink {
+  text-align: center;
+}
+
+.wk-bar .go {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+.wk-bar .btnlink {
+  flex: 2;
+  display: block;
+  padding: 14px 16px;
+  border-radius: 999px;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.wk-bar .prog {
+  flex: 1;
+  align-self: center;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.wk-bar button:disabled {
+  opacity: 0.5;
+}
+
+.wk-bar .rest {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wk-bar .rest .left {
+  font-size: 22px;
+  min-width: 60px;
+}
+
+.wk-bar .rest .line {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  min-width: 20px;
+}
+
+.wk-bar .rest .line i {
+  display: block;
+  height: 100%;
+  background: var(--c);
+}
+
+.wk-bar .rest button {
+  flex: none;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+@media (max-width: 360px) {
+  .wk .sets {
+    grid-template-columns: 18px 1fr 56px 48px 42px 36px;
+    gap: 6px;
+  }
+}
+
+/* Workout tracker: pinned header with the clock and rest timer */
+.wk-head {
+  position: fixed;
+  top: env(safe-area-inset-top, 0px);
+  left: 0;
+  right: 0;
+  z-index: 6;
+  max-width: 480px;
+  margin-inline: auto;
+  padding: 14px 16px 10px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  transform: translateY(var(--vv-top, 0px));
+}
+
+.wk-head .row1 {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.wk-head h1 {
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.wk-head .clock {
+  font-size: 20px;
+  color: var(--c);
+}
+
+.wk-head .spacer {
+  flex: 1;
+}
+
+.wk-head .prog {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.wk-head .back {
+  color: var(--ink-2);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.wk-head .rest {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.wk-head .rest .left {
+  font-size: 24px;
+  min-width: 64px;
+  color: var(--ink);
+}
+
+.wk-head .rest.over .left {
+  font-size: 15px;
+  color: var(--c);
+}
+
+.wk-head .rest .line {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  min-width: 20px;
+}
+
+.wk-head .rest .line i {
+  display: block;
+  height: 100%;
+  background: var(--c);
+}
+
+.wk-head .rest button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+}
+
+.wk .exact {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+
+.wk .exact .icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-2);
+  border-radius: 50%;
+}
+
+.wk .exact .icon.has {
+  color: var(--c);
+}
+
+.wk .exact .text {
+  padding: 8px 6px;
+  font-size: 14px;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.wk .setting {
+  font-size: 12px;
+  color: var(--c);
+  margin-top: 2px;
+}
+
+.wk input.machine,
+.wk textarea.note {
+  width: 100%;
+  margin-top: 8px;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.wk textarea.note {
+  resize: none;
+  font-size: 15px;
+  min-height: 40px;
+}
+
+.wk .setctl {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.wk .setctl button {
+  flex: 1;
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+}
+
+.wk button:focus-visible,
+.wk textarea:focus-visible {
+  outline: 2px solid var(--c);
+  outline-offset: 2px;
+}
+
+.picker {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: var(--bg);
+  overflow-y: auto;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 40px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.picker .pickhead {
+  display: flex;
+  gap: 10px;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  padding-bottom: 10px;
+}
+
+.picker input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.picker .pickhead button {
+  color: var(--ink-2);
+  padding: 0 4px;
+}
+
+.picker ul {
+  list-style: none;
+}
+
+.picker li button {
+  width: 100%;
+  text-align: left;
+  padding: 13px 2px;
+  font-size: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.tools section {
+  margin-top: 28px;
+}
+
+.tools h2 {
+  font-size: 22px;
+  font-weight: 500;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 14px;
+}
+
+.tools .qr {
+  background: #ffffff;
+  padding: 14px;
+  width: fit-content;
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.tools .qr img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.tools .facts div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.tools .facts dt {
+  color: var(--ink-2);
+}
+
+.tools .facts dd {
+  font-size: 16px;
+}
+
+.sheet .why a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+/* Cardio phone tasks */
+.cardio .lead {
+  color: var(--ink-2);
+  margin-bottom: 16px;
+}
+
+.cardio .addrow {
+  display: flex;
+  gap: 8px;
+}
+
+.cardio .addrow input {
+  flex: 1;
+  min-width: 0;
+  padding: 13px 14px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.cardio .addrow button {
+  padding: 0 18px;
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 16px;
+}
+
+.cardio section {
+  margin-top: 28px;
+}
+
+.cardio h2 {
+  font-size: 22px;
+  font-weight: 500;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+.cardio ul {
+  list-style: none;
+}
+
+.cardio li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.cardio .what {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cardio .t {
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.cardio .area {
+  font-size: 11px;
+  color: var(--ink-2);
+}
+
+.cardio .tick {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--training);
+  border-radius: 50%;
+  flex: none;
+}
+
+.cardio .later {
+  font-size: 14px;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 6px 2px;
+  white-space: nowrap;
+}
+
+.cardio .bar button {
+  text-align: center;
+}
+
+.cardio .bar .go {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+/* Workout: numbered movements, set menu, add exercise */
+.wk .exhead h2 .num {
+  display: inline-block;
+  min-width: 22px;
+  margin-right: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--c);
+}
+
+.wk .sets .idx {
+  height: 34px;
+  border-radius: 8px;
+  color: var(--ink-2);
+}
+
+.wk .sets .idx:not(:disabled):active {
+  background: var(--surface);
+}
+
+.wk .sets .idx.warm {
+  color: var(--c);
+  font-weight: 500;
+}
+
+.wk .addex {
+  width: 100%;
+  margin-top: 30px;
+  padding: 14px;
+  font-size: 16px;
+  color: var(--ink);
+  border: 1px dashed var(--ink-2);
+  border-radius: 10px;
+}
+
+.wk .scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgb(0 0 0 / 0.4);
+  border: 0;
+}
+
+.wk .setmenu {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  max-width: 448px;
+  margin-inline: auto;
+  z-index: 21;
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 8px 16px;
+}
+
+.wk .setmenu p {
+  font-size: 12px;
+  color: var(--ink-2);
+  padding: 10px 0 6px;
+}
+
+.wk .setmenu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 15px 0;
+  font-size: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.picker .placing {
+  flex: 1;
+  align-self: center;
+  font-size: 18px;
+  min-width: 0;
+}
+
+.picker .placing .mono {
+  font-size: 12px;
+  color: var(--ink-2);
+  margin-right: 6px;
+}
+
+.picker .positions li button {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+}
+
+.picker .positions .num {
+  font-size: 14px;
+  color: var(--training);
+  min-width: 22px;
+}
+
+/* Recurring reminders on the Today screen */
+.rems {
+  margin-bottom: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.rem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+.rem .tick {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--appointment);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--bg);
+  font-size: 15px;
+  flex: none;
+}
+
+.rem.on .tick {
+  background: var(--appointment);
+}
+
+.rem .what {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.rem .t {
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.rem .d,
+.rem .state {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.rem.on .t {
+  opacity: 0.5;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.admin .lastrow {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.admin .lastrow label {
+  flex: 1 1 100%;
+  font-size: 16px;
+}
+
+.admin .lastrow label .mono {
+  font-size: 12px;
+  color: var(--ink-2);
+  margin-left: 6px;
+}
+
+.admin .lastrow input {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin .lastrow button {
+  padding: 13px 20px;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.rem.late {
+  align-items: flex-start;
+}
+
+.rem.late .ask {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.rem.late .ask button {
+  padding: 8px 14px;
+  font-size: 15px;
+  border: 1px solid var(--appointment);
+  border-radius: 999px;
+  color: var(--ink);
+}
+
+.rem button.state {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.admin .remrow {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 10px;
+}
+
+.admin .remrow .rm {
+  margin-top: 6px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--ink-2);
+  background: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.admin .addrem {
+  margin-top: 18px;
+}
