@@ -9,7 +9,7 @@ It is **single-user and self-hosted**: your data lives in your own free database
 Open **Claude Code** (the Code tab in the Claude desktop app) and paste:
 
 ```
-Set up Day Planner for me from https://github.com/OWNER/REPO and follow its SETUP-WITH-AI.md
+Set up Day Planner for me from https://github.com/mattseesass/dayplanner-public and follow its SETUP-WITH-AI.md
 ```
 
 Claude downloads the project, asks about your day, and walks you through everything else. See [SETUP-WITH-AI.md](SETUP-WITH-AI.md) for what to expect. The rest of this page is the manual route.

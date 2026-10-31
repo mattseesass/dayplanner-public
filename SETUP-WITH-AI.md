@@ -5,7 +5,7 @@
 Open **Claude Code** (the Code tab in the Claude desktop app, or `claude` in a terminal), and paste one line:
 
 ```
-Set up Day Planner for me from https://github.com/OWNER/REPO and follow its SETUP-WITH-AI.md
+Set up Day Planner for me from https://github.com/mattseesass/dayplanner-public and follow its SETUP-WITH-AI.md
 ```
 
 (Use the address of the repository you were sent.) Claude downloads it, asks you about your day, writes your settings, and walks you through the rest. Plan on about 30 minutes.
