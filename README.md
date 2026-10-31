@@ -4,6 +4,16 @@ A private, phone-first day planner that you host yourself. One screen shows your
 
 It is **single-user and self-hosted**: your data lives in your own free database, the app runs on your own free hosting account, and nobody else, including the person who shared this with you, can see or host any of it.
 
+## The quick way: let Claude set it up
+
+Open **Claude Code** (the Code tab in the Claude desktop app) and paste:
+
+```
+Set up Day Planner for me from https://github.com/OWNER/REPO and follow its SETUP-WITH-AI.md
+```
+
+Claude downloads the project, asks about your day, and walks you through everything else. See [SETUP-WITH-AI.md](SETUP-WITH-AI.md) for what to expect. The rest of this page is the manual route.
+
 
 ## What you get
 
@@ -28,13 +38,13 @@ Free tiers change, so check each provider's current terms. At the time of writin
 
 ## Set it up
 
-1. **Get the code.** Fork this repository (keep your fork **private**, because your schedule lives in it), then clone it and run `npm install`.
+1. **Get the code.** Click **Use this template → Create a new repository** and make it **Private**, because your schedule lives in it. (Don't fork: a fork of a public repository can't be private.) Clone your copy and run `npm install`.
 2. **Make it yours.** Edit the files in [`config/`](config/): see "Your information" below.
 3. **Create a Supabase project** (supabase.com, free). Remember the database password you choose.
 4. **Fill in `.env.local`.** Copy `.env.example` to `.env.local` and fill in each value. The comments next to each one say where to find it.
 5. **Create the tables:** `npm run db:migrate`
 6. **Try it locally:** `npm run dev`, open http://localhost:3000 and sign in with your passcode.
-7. **Deploy:** push your fork to GitHub, import it at vercel.com, add the environment variables from `.env.local` (all except `SUPABASE_DB_URL`), then deploy.
+7. **Deploy:** push your copy to GitHub, import it at vercel.com, add the environment variables from `.env.local` (all except `SUPABASE_DB_URL`), then deploy.
 8. **Put it on your phone:** open your Vercel address in the phone's browser, sign in, and choose Add to Home Screen.
 
 Two things that catch people out:
@@ -63,7 +73,7 @@ A day is created from `config/day.ts` the first time you open it, then saved. Ed
 - The passcode is the only thing protecting the app. Make it long.
 - `SUPABASE_SERVICE_ROLE_KEY` gives full access to your database. It lives only in `.env.local` and in Vercel's environment settings. Never put it in the code, in a chat or in a screenshot.
 - Every table has row-level security switched on with no public policies, so the database is reachable only with that key.
-- Keep your fork private, because your schedule, meals and exercises are in `config/`.
+- Keep your copy private, because your schedule, meals and exercises are in `config/`.
 
 ## The optional Brain connector
 

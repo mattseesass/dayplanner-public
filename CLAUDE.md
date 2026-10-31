@@ -5,8 +5,8 @@
 A self-hosted, single-user personal planner (Next.js 16, TypeScript, Supabase). Read README.md for what it does.
 
 ## If the user asks you to set it up
-Follow SETUP-WITH-AI.md step by step: interview the user, write their answers into config/, help them create their own
-Supabase and Vercel projects, run the migration, test locally, then deploy.
+Follow the playbook in SETUP-WITH-AI.md ("For Claude") phase by phase: interview the user, write their answers into
+config/, help them create their own Supabase and Vercel projects, run the migration, test locally, then deploy.
 
 ## Rules
 - Personal choices live only in `config/` (time zone, day template, workouts, meals, rotation). Reminders are added in the
